@@ -27,4 +27,10 @@ app.get('/news', (요청, 응답) => {
     // 응답.send('오늘 비옴')
 })
 
+app.get('/list', async (요청, 응답) => {
+  let result = await db.collection('post').find().toArray()
+  console.log(result[0]) // result.title 쓰면 '첫게시물'만 뜸
+  응답.send(result[0].title)
+})
+
 
