@@ -2,6 +2,8 @@ const express = require('express')
 const app = express()
 
 app.use(express.static(__dirname + '/public'))
+app.set('view engine', 'ejs')
+
 
 const { MongoClient } = require('mongodb');
 
@@ -30,7 +32,13 @@ app.get('/news', (요청, 응답) => {
 app.get('/list', async (요청, 응답) => {
   let result = await db.collection('post').find().toArray()
   console.log(result[0]) // result.title 쓰면 '첫게시물'만 뜸
-  응답.send(result[0].title)
+  // 응답.send(result[0].title)
+  응답.render('list.ejs', { 글목록 : result }) // ejs파일로 데이터 보내는 법 (sendFile 아님)
+})
+
+app.get('/time', async (요청, 응답) => {
+  let result = await db.collection('post').find().toArray()
+  응답.render('time.ejs', { data : new Date() }) 
 })
 
 
