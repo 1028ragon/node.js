@@ -3,6 +3,8 @@ const app = express()
 
 app.use(express.static(__dirname + '/public'))
 app.set('view engine', 'ejs')
+app.use(express.json())
+app.use(express.urlencoded({extended:true}))
 
 
 const { MongoClient } = require('mongodb');
@@ -30,15 +32,37 @@ app.get('/news', (요청, 응답) => {
 })
 
 app.get('/list', async (요청, 응답) => {
-  let result = await db.collection('post').find().toArray()
-  console.log(result[0]) // result.title 쓰면 '첫게시물'만 뜸
+  let result = await db.collection('post').find().toArray() // MongoDB의 post 컬렉션에서 모든 문서를 찾아 배열(result)로 변환합니다.
+  // console.log(result[0]) // 콘솔창에 띄우는거임, result.title 쓰면 '첫게시물'만 뜸
   // 응답.send(result[0].title)
   응답.render('list.ejs', { 글목록 : result }) // ejs파일로 데이터 보내는 법 (sendFile 아님)
 })
 
-app.get('/time', async (요청, 응답) => {
-  let result = await db.collection('post').find().toArray()
-  응답.render('time.ejs', { data : new Date() }) 
+app.get('/write', (요청, 응답) => {
+    응답.render('write.ejs')
 })
 
+app.post('/add', async (요청, 응답) => {
+    console.log(요청.body)
+
+    if (요청.body.title == '') {
+    응답.send('제목입력안했는데?')
+    } else { 
+      await db.collection('post').insertOne({title : 요청.body.title, content : 요청.body.content})
+      응답.redirect('/list')
+    }
+
+// 에러상황 처리
+
+    try {  
+      if (요청.body.title == '') {
+    응답.send('제목입력안했는데?')
+      } else { 
+      await db.collection('post').insertOne({title : 요청.body.title, content : 요청.body.content})
+      응답.redirect('/list')
+      }
+    } catch(e) {
+      응답.status(500).send('서버에러남 ㅈㅅ')
+    }
+})
 
