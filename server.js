@@ -48,7 +48,7 @@ app.post('/add', async (요청, 응답) => {
     if (요청.body.title == '') {
     응답.send('제목입력안했는데?')
     } else { 
-      await db.collection('post').insertOne({title : 요청.body.title, content : 요청.body.content})
+      await db.collection('post').insertOne({title : 요청.body.title, content : 요청.body.content}) // DB에 데이터 저장하려면 insertOne
       응답.redirect('/list')
     }
 
