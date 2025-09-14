@@ -1,13 +1,11 @@
 const express = require('express')
 const app = express()
+const { MongoClient, ObjectId } = require('mongodb');
 
 app.use(express.static(__dirname + '/public'))
 app.set('view engine', 'ejs')
 app.use(express.json())
 app.use(express.urlencoded({extended:true}))
-
-
-const { MongoClient } = require('mongodb');
 
 let db
 const url = 'mongodb+srv://1028ragon:npcs090909@1028ragon.oaooppv.mongodb.net/?retryWrites=true&w=majority&appName=1028ragon'
@@ -53,7 +51,6 @@ app.post('/add', async (요청, 응답) => {
     }
 
 // 에러상황 처리
-
     try {  
       if (요청.body.title == '') {
     응답.send('제목입력안했는데?')
@@ -66,3 +63,8 @@ app.post('/add', async (요청, 응답) => {
     }
 })
 
+app.get('/detail/:id', async (요청, 응답) => {
+  let result = await db.collection('post').findOne({ _id : new ObjectId(요청.params.id) })
+    console.log(요청.params)
+    응답.render('detail.ejs', { result : result })
+})
