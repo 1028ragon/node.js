@@ -59,12 +59,21 @@ app.post('/add', async (요청, 응답) => {
       응답.redirect('/list')
       }
     } catch(e) {
-      응답.status(500).send('서버에러남 ㅈㅅ')
+      응답.status(500).send('서버에러남')
     }
 })
-
+  
 app.get('/detail/:id', async (요청, 응답) => {
-  let result = await db.collection('post').findOne({ _id : new ObjectId(요청.params.id) })
-    console.log(요청.params)
-    응답.render('detail.ejs', { result : result })
+
+    try {
+      let result = await db.collection('post').findOne({ _id : new ObjectId(요청.params.id) })
+      if (result == null) {
+        응답.status(400).send('없는 페이지임')
+      }
+        console.log(요청.params)
+        응답.render('detail.ejs', { result : result })
+    } catch(e) {
+      console.log(e)
+      응답.status(400).send('이상한 url 입력함')
+    }
 })
