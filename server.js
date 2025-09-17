@@ -64,16 +64,18 @@ app.post('/add', async (요청, 응답) => {
 })
   
 app.get('/detail/:id', async (요청, 응답) => {
+  let result = await db.collection('post').findOne({ _id : new ObjectId(요청.params.id) })
+  응답.render('detail.ejs', {result : result})
+})
 
-    try {
-      let result = await db.collection('post').findOne({ _id : new ObjectId(요청.params.id) })
-      if (result == null) {
-        응답.status(400).send('없는 페이지임')
-      }
-        console.log(요청.params)
-        응답.render('detail.ejs', { result : result })
-    } catch(e) {
-      console.log(e)
-      응답.status(400).send('이상한 url 입력함')
-    }
+app.get('/edit/:id', async (요청, 응답) => {
+  let result = await db.collection('post').findOne({ _id : new ObjectId(요청.params.id) })
+  응답.render('edit.ejs', {result : result})
+})
+
+
+app.post('/edit/:id', async (요청, 응답) => {
+  await db.collection('post').updateOne({_id : new ObjectId(요청.body.id)}, {$set : { title : '요청.body.title', content : '요청.body.content'}})
+  console.log(result)
+  응답.redirect('/list')
 })
