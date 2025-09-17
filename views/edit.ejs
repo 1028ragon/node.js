@@ -12,13 +12,9 @@
     
     <%- include('nav.ejs') %>
 
-    <form class="form-box" action="/edit" method="POST"> <!--전송버튼을 눌렀을 때, action의 URL로 서버에 POST 요청이 감-->
+    <form class="form-box" action="/edit?_method=PUT" method="POST"> <!--전송버튼을 눌렀을 때, action의 URL로 서버에 PUT 요청이 감-->
       <h4>수정하기</h4>
-<<<<<<< HEAD
       <input name="id" value="<%= result._id %>" style="display: none;">
-=======
-      <input name="id" value="<%= result._id %>">
->>>>>>> 54f65755ba6802507811086c7bf881234997e451
       <input name="title" value="<%= result.title %>">
       <input name="content" value="<%= result.content %>">
       <button type="submit">전송</button>
