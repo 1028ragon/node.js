@@ -77,7 +77,7 @@ app.get('/edit/:id', async (요청, 응답) => {
 
 
 app.put('/edit', async (요청, 응답) => {
-
+  
   // await db.collection('post').updateOne({_id : 1 }, {$inc : { like : 1}})
   // 응답.redirect('/list')
   await db.collection('post').updateOne({_id : new ObjectId(요청.body.id)}, {$set : { title : 요청.body.title, content : 요청.body.content}})
