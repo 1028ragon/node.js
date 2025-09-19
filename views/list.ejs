@@ -18,12 +18,20 @@
                         <%= 글목록[i].title %>
                     </a>
                     <a href="/edit/<%= 글목록[i]._id %>">✍️</a>
+                    <span class="delete" data-id="<%= 글목록[i]._id %>">🗑️</span>
                 </h4>
                 <p>글내용임</p>
         </div>
       <%  } %>
-   
   </div> 
+  <script>
+    document.querySelectorAll('.delete')[0].addEventListener('click', function(e){
+        e.target.dataset.id
+        fetch('/delete?docid=' + e.target.dataset.id, {
+            method : 'DELETE',
+        })
+    })
+  </script>
 
 </body>
 </html>
