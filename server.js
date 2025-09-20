@@ -88,3 +88,18 @@ app.delete('/delete', async (요청, 응답) => {
   await db.collection('post').deleteOne({ _id : new ObjectId(요청.query.docid) })
   응답.send('삭제완료')
 })
+
+// 글목록 여러 페이지로 나누기
+
+app.get('/list/:id', async (요청, 응답) => {
+  // 1번 ~ 5번글을 찾아서 result 변수에 저장
+  let result = await db.collection('post').find().skip((요청.params.id - 1) * 5).limit(5).toArray() 
+  응답.render('list.ejs', { 글목록 : result })
+})
+
+app.get('/list/next/:id', async (요청, 응답) => {
+  let result = await db.collection('post')
+  .find( {_id : {$gt : new ObjectId(요청.params.id) }})
+  .limit(5).toArray() 
+  응답.render('list.ejs', { 글목록 : result })
+})
